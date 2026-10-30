@@ -1,0 +1,21 @@
+# dependências
+node_modules/
+
+# build
+.next/
+out/
+
+# banco local de demonstração
+.data/
+
+# uploads do modo demo
+public/uploads/
+
+# ambiente
+.env
+.env.local
+.env*.local
+
+# sistema
+.DS_Store
+*.log

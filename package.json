@@ -1,0 +1,21 @@
+{
+  "name": "jrway",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Plataforma JRWay — cada pessoa cria sua própria página de links e fotos, com hospedagem de imagens em WebP.",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "@neondatabase/serverless": "^1.2.0",
+    "next": "^15.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "sharp": "^0.35.0"
+  },
+  "engines": {
+    "node": ">=20.9.0"
+  }
+}
