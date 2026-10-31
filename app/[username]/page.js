@@ -1,8 +1,8 @@
 import { notFound } from 'next/navigation';
 import { headers } from 'next/headers';
 import ProfileView from '@/components/ProfileView';
+import Icon from '@/components/Icon';
 import { ensureSchema, findUserByUsername, getLinksForUser, incrementViews } from '@/lib/db';
-
 export const dynamic = 'force-dynamic';
 
 export async function generateMetadata({ params }) {
@@ -33,7 +33,7 @@ function SuspendedScreen({ name }) {
   return (
     <main className="nf">
       <div className="nf-card">
-        <span className="nf-emoji">🚫</span>
+        <span className="nf-emoji"><Icon name="ban" size={52} /></span>
         <h1>Página indisponível</h1>
         <p>Esta página foi desativada pela moderação da plataforma.</p>
       </div>
@@ -67,5 +67,8 @@ export default async function ProfilePage({ params }) {
     // contador não deve quebrar a página
   }
 
-  return <ProfileView user={user} links={links} />;
+  // Higieniza: ProfileView é client component → props vão serializados no HTML.
+  // hash de senha e mensagem privada nunca saem aqui.
+  const { password_hash, message, ...safeUser } = user;
+  return <ProfileView user={safeUser} links={links} />;
 }

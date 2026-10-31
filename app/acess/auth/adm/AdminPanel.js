@@ -50,6 +50,7 @@ export default function AdminPanel({ users, stats }) {
 
   const approveUser = (u) => act(() => call(u.id, 'PATCH', { approved: true }), u.id);
   const toggleVerified = (u) => act(() => call(u.id, 'PATCH', { verified: !u.verified }), u.id);
+  const toggleAdmin = (u) => act(() => call(u.id, 'PATCH', { admin_badge: !u.admin_badge }), u.id);
   const toggleSuspended = (u) => act(() => call(u.id, 'PATCH', { suspended: !u.suspended }), u.id);
   const removeUser = (u) => {
     if (!confirm(`Excluir PERMANENTEMENTE @${u.username} e todos os links?`)) return;
@@ -131,6 +132,11 @@ export default function AdminPanel({ users, stats }) {
                           <Icon name="badgeCheck" size={11} />
                         </span>
                       )}
+                      {u.admin_badge && (
+                        <span className="pv-badge pv-badge--admin" title="Equipe JRWay">
+                          <Icon name="shield" size={11} />
+                        </span>
+                      )}
                       {msg && (
                         <button
                           type="button"
@@ -174,6 +180,15 @@ export default function AdminPanel({ users, stats }) {
                         </button>
                         <button
                           type="button"
+                          className={`tool-btn ${u.admin_badge ? 'on gold' : ''}`}
+                          onClick={() => toggleAdmin(u)}
+                          title={u.admin_badge ? 'Remover selo de Admin' : 'Dar selo de Admin (equipe)'}
+                          aria-label={u.admin_badge ? 'Remover selo de Admin' : 'Dar selo de Admin'}
+                        >
+                          <Icon name="shield" size={15} />
+                        </button>
+                        <button
+                          type="button"
                           className={`tool-btn ${u.suspended ? 'on' : ''}`}
                           onClick={() => toggleSuspended(u)}
                           title={u.suspended ? 'Reativar' : 'Suspender'}
@@ -195,7 +210,7 @@ export default function AdminPanel({ users, stats }) {
                       </td>
                     </tr>
                   )}
-                </>
+                </Fragment>
               );
             })}
             {!filtered.length && (
@@ -207,7 +222,7 @@ export default function AdminPanel({ users, stats }) {
 
       <p className="dash-hint">
         <Icon name="sparkle" size={13} /> o “check” aprova a conta (a página fica pública) • o “v” dá o selo verificado •
-        “pause” desativa a página do usuário • a lixeira exclui para sempre.
+        o escudo dá o selo de <b>Admin</b> (equipe) • “pause” desativa a página do usuário • a lixeira exclui para sempre.
       </p>
     </div>
   );

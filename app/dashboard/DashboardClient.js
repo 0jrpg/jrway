@@ -29,7 +29,7 @@ function IconPicker({ value, onChange }) {
         aria-label="Trocar ícone do link"
         aria-expanded={open}
       >
-        {hasIcon(value) ? <Icon name={value} size={18} strokeWidth={2.2} /> : (value || '🔗')}
+        {hasIcon(value) ? <Icon name={value} size={18} strokeWidth={2.2} /> : (value || <Icon name="link" size={18} strokeWidth={2.2} />)}
       </button>
       {open && (
         <div className="icon-pick-pop" role="listbox" aria-label="Escolha o ícone">

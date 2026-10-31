@@ -5,9 +5,15 @@ personalização de tema, cores, fonte, efeitos e botões — tudo com prévia a
 
 - 👥 **Multiusuário com moderação**: qualquer pessoa pode pedir conta, mas **o admin precisa aprovar** — a página pública só existe após aprovação
 - 🎨 **Personalização**: 6 temas prontos + cores customizadas, 4 estilos de botão, fonte, arredondamento e efeitos de fundo
-- 💅 **Tema por botão**: cada link pode ter seu próprio look — temas **Instagram, TikTok e WhatsApp** ou cor/gradiente escolhido um a um (botão 🎨 no painel)
+- 💅 **Tema por botão**: cada link pode ter seu próprio look — temas **Instagram, TikTok e WhatsApp** ou cor/gradiente escolhido um a um
+- 🌈 **Aureola da avatar**: anel em volta da foto configurável — **arco animado, anel sólido, degradê ou nenhum**, com as duas cores e a espessura escolhidas
+- 🏅 **Selos**: **verificado** (posição escolhida: ao lado do nome, depois do @ ou no canto do avatar) e **selo de Admin/equipe** dourado — ambos atribuíveis pelo painel
 - 🖼️ **Hospedagem de fotos**: aceita qualquer formato de imagem (JPG, PNG, GIF, AVIF, TIFF…), converte para **WebP** e guarda em um **repositório de dados no GitHub** (token fine-grained), servido pela CDN jsDelivr
-- ✂️ **Editor de recorte**: antes do envio dá para **recortar, girar ⟲, dar zoom e espelhar** a imagem (estilo Instagram) — o recorte sai em WebP já enquadradíssimo
+- ✂️ **Editor de recorte**: antes do envio dá para **recortar, girar, dar zoom e espelhar** a imagem (estilo Instagram) — o recorte sai em WebP já enquadradíssimo
+- 🛡 **Imagens protegidas**: avatar, capa e galeria **sem arrastar, sem clique-direito e sem toque-longo de salvar** no celular
+- 🔤 **Ícones em SVG**: nada de emoji na interface — catálogo próprio de ícones desenhados em traço (`components/Icon.js`), logo própria em SVG (favicon incluído)
+- ✉️ **Mensagem para o admin**: quem se cadastra pode escrever uma mensagem que aparece **direto no painel** antes de aprovar (com notificação por **Discord/Telegram** opcional)
+- 🤍 **"Criado no JRWay" opcional**: perfis **verificados** podem ocultar o crédito da página
 - 🔗 **https:// automático**: colou `instagram.com/seuperfil`? O https:// entra sozinho (no navegador e no servidor)
 - 📊 **Estatísticas**: visitas na página e cliques por link
 - 🔒 **Admin secreto** em `/acess/auth/adm` — **omitido de propósito** do `robots.txt` e do `sitemap.xml`, com `noindex` ativo
@@ -54,8 +60,18 @@ demo*: dados em `.data/db.json` e uploads em `public/uploads/` (apenas na sua m�
    | `GITHUB_TOKEN` | token fine-grained | veja abaixo ⬇️ |
    | `GITHUB_REPO` | `SEU-USUARIO/jrway-dados` | repo criado abaixo ⬇️ |
    | `GITHUB_BRANCH` | `main` | (opcional) |
+   | `DISCORD_WEBHOOK_URL` | webhook do canal (ou `TELEGRAM_BOT_TOKEN`+`TELEGRAM_CHAT_ID`) | opcional — avisa a cada cadastro |
 
 4. **Deploy**. Pronto — a plataforma já está no ar. 🎉
+
+### Aviso de novos cadastros (opcional)
+
+Configure **uma** das opções e cada conta nova chega no seu chat com o
+**@username** e a mensagem que a pessoa escreveu no cadastro:
+
+- **Discord**: canal → *Configurações → Integrations → Webhooks* → copie a URL → `DISCORD_WEBHOOK_URL`;
+- **Telegram**: crie um bot (@BotFather → token), pegue o `chat_id` do seu chat → `TELEGRAM_BOT_TOKEN` + `TELEGRAM_CHAT_ID`;
+- sem nada configurado, a notificação simplesmente não acontece (o cadastro funciona igual).
 
 ## 🖼️ Hospedagem de fotos (repositório de dados no GitHub)
 
@@ -88,16 +104,25 @@ caem em `public/uploads/` — funciona no `npm run dev` mas **não** persiste na
 
 Ao escolher uma imagem no painel (avatar, capa ou foto da galeria) o editor abre na hora:
 
-- **arrastar** posiciona a imagem • **roda do mouse / pinça** = zoom • **⟲ ⟳** giram de 90° em 90° • **⇄** espelha
+- **arrastar** posiciona a imagem • **roda do mouse / pinça** = zoom • giram de 90° em 90° • espelha com um clique
 - o **frame é fixo** e mostra exatamente o enquadramento final: avatar 1:1 (512×512), capa 3:1 (1200×400) e, para fotos, chips de proporção (1:1, 4:5, 16:9, 3:2 — até 1440px)
 - ao confirmar, o recorte é gerado em **WebP** no navegador e segue pelo pipeline de upload normal
 
+### Aureola da foto + selos (aba Aparência)
+
+- **Aureola**: escolha entre *Arco animado* (padrão, usa as cores do tema), *Anel sólido*, *Degradê* ou *Nenhuma* — com seletor das duas cores e espessura de 2 a 8px. A prévia mostra tudo na hora e salva sozinho.
+- **Selo verificado** (só perfis verificados, atribuído pelo admin): escolha a posição — *ao lado do nome*, *depois do @* ou *canto do avatar*.
+- **Selo de Admin** (dourado, escudo): também vem do painel admin, aparece ao lado do nome na página pública.
+- **Crédito "Criado no JRWay"**: só perfis verificados podem ocultar. **Des-verificar no painel volta a exigir o crédito automaticamente.**
+- As permissões são reforçadas no servidor: a API recusa (`403`) mudanças de selo/crédito de quem não é verificado.
+
 ### Tema por botão (Instagram/TikTok/WhatsApp)
 
-Na aba **Links**, abra o 🎨 de qualquer link:
+Na aba **Links**, abra o seletor de tema (ícone de paleta) de qualquer link:
 
 - **Marcar uma marca** aplica o visual oficial (Instagram com o gradiente clássico, TikTok preto, WhatsApp verde) e troca o ícone do link automaticamente;
 - **"Nenhum" + Fundo/Texto/Gradiente** cria um botão com cor própria;
+- o **ícone do link** também é SVG agora: clique no quadrado do ícone para abrir o catálogo (16 ícones).
 - sem tema individual, o botão segue o estilo global da página (aba Aparência).
 
 ### Detalhes
@@ -111,16 +136,19 @@ Na aba **Links**, abra o 🎨 de qualquer link:
 
 - URL: **`/acess/auth/adm`** (senha = variável `ADMIN_PASSWORD`)
 - Recursos: estatísticas gerais (incluindo fila de pendentes), buscar e filtrar
-  usuários, **aprovar contas** (✅ — só depois disso a página fica pública),
-  **verificar** perfil (selo ✓), **suspender**/reativar páginas e **excluir**
+  usuários, **aprovar contas** (só depois disso a página fica pública),
+  **verificar** perfil (selo), **dar o selo de Admin** (escudo dourado — aparece
+  na página pública do usuário), **suspender**/reativar páginas e **excluir**
   usuários permanentemente.
+- Contas **pendentes com mensagem** ganham um botão "mensagem" na própria
+  tabela, que abre o texto que a pessoa escreveu ao se cadastrar.
 
 ### Fluxo de aprovação
 
-1. Alguém cria a conta → ela nasce com status **pendente**
+1. Alguém cria a conta → ela nasce com status **pendente** (e pode deixar mensagem)
 2. Ela pode entrar no dashboard e deixar a página pronta (nada é público ainda)
-3. Você aprova no painel admin (✅) → a página `/usuario` passa a existir e entra no sitemap
-4. Contas indesejadas: 🗑️ exclui, ou ⏸️ suspende a qualquer momento
+3. Você aprova no painel → a página `/usuario` passa a existir e entra no sitemap
+4. Contas indesejadas: exclui, ou suspende a qualquer momento
 
 O cadastro tem um limitador anti-spam (10 contas/hora por IP) para não encher sua fila.
 
@@ -141,17 +169,25 @@ Assim os buscadores não indexam o painel e a URL permanece discreta.
 ```
 app/
   page.js               → landing (marketing)
-  entrar/               → login + cadastro
+  entrar/               → login + cadastro (com mensagem opcional pro admin)
   dashboard/            → painel do usuário (perfil, links, aparência, fotos, prévia)
   [username]/           → página bio pública de cada usuário
   acess/auth/adm/       → painel admin SECRETO (não indexado)
   api/upload/           → recebe imagem → converte WebP → envia ao GitHub
   api/…                 → rotas de auth, links, cliques e admin
+  icon.svg/icon.png     → favicon no desenho da logo (Next serve sozinho)
   robots.js, sitemap.js → SEO (admin omitido de propósito)
+components/
+  Icon.js               → catálogo de ícones SVG (traço, sem deps)
+  Logo.js               → logo do JRWay (SVG reutilizável)
+  SafeImg.js            → <img> protegida (sem arrastar/salvar/clique-direito)
+  ProfileView.js        → render da página bio (aureola, selos, watermark)
+  ImageCropper.js       → editor de recorte
 lib/
   db.js                 → Neon Postgres + modo demo em arquivo
   auth.js               → senhas (scrypt) e sessões assinadas (HMAC)
-  theme.js              → temas prontos + sanitização de tema
+  theme.js              → temas prontos + sanitização (tema, aureola, selo, custom)
+  notify.js             → aviso de cadastro para Discord/Telegram (opcional)
   imaging.js            → conversão para WebP (sharp)
   github.js             → upload no repo de dados (fine-grained PAT)
 ```
@@ -164,6 +200,8 @@ lib/
 - Usernames reservados (`/api`, `/dashboard`, `/acess`, etc.) bloqueados no cadastro
 - Comparação de senha do admin em **tempo constante**
 - Uploads validados (tipo MIME, tamanho, sem SVG) e convertidos — nada cru vai para o repo
+- As páginas públicas **nunca serializam** hash de senha nem a mensagem privada (higienização antes do render)
+- Recursos de verificado (selo posicionável, ocultar crédito) são **reforçados na API**, não só na interface
 
 ## Dicas finais
 

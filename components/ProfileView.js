@@ -20,7 +20,6 @@ export default function ProfileView({ user, links = [], preview = false }) {
 
   // Ícone do link: nomes do catálogo viram SVG; emojis legados continuam texto.
   const linkIcon = (name, extra) => (hasIcon(name) ? <Icon name={name} {...(extra || {})} /> : name);
-
   const styleVars = {
     '--bg1': t.bg1,
     '--bg2': t.bg2,
@@ -73,7 +72,7 @@ export default function ProfileView({ user, links = [], preview = false }) {
     </span>
   );
 
-  const mark = <Logo size={22} className="pv-mark" />;
+  const mark = <Logo size={15} className="pv-mark" />;
 
   return (
     <div
@@ -110,6 +109,11 @@ export default function ProfileView({ user, links = [], preview = false }) {
 
         <h1 className="pv-name">
           {user.display_name}
+          {user.admin_badge ? (
+            <span className="pv-badge pv-badge--admin" title="Equipe JRWay">
+              <Icon name="shield" size={11} />
+            </span>
+          ) : null}
           {user.verified && badgePos === 'name' ? <Badge /> : null}
         </h1>
         <span className="pv-handle">
@@ -122,6 +126,8 @@ export default function ProfileView({ user, links = [], preview = false }) {
         <div className="pv-links">
           {links.map((l, i) => {
             const look = lookFor(l);
+            const iconName = look.icon || l.icon || 'link';
+            const svgIcon = hasIcon(iconName);
             return (
               <a
                 key={l.id}
@@ -133,8 +139,8 @@ export default function ProfileView({ user, links = [], preview = false }) {
                 onClick={preview ? (e) => e.preventDefault() : undefined}
                 title={preview ? l.url : undefined}
               >
-                <span className={`pv-link-icon ${hasIcon(look.icon || l.icon) ? 'pv-icon-svg' : ''}`}>
-                  {linkIcon(look.icon || l.icon, { size: 19 })}
+                <span className={`pv-link-icon ${svgIcon ? 'pv-icon-svg' : ''}`}>
+                  {linkIcon(iconName, { size: 19 })}
                 </span>
                 <span className="pv-link-label">{l.label}</span>
                 <span className="pv-link-arrow" aria-hidden="true"><Icon name="arrowRight" size={17} /></span>

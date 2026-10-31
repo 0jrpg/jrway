@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import Icon from '@/components/Icon';
 
 export default function AdminLogin() {
   const router = useRouter();
@@ -34,7 +35,7 @@ export default function AdminLogin() {
     <main className="auth-wrap">
       <div className="landing-bg" aria-hidden="true" />
       <form className="auth-card" onSubmit={submit}>
-        <span className="adm-badge">🔒 área restrita</span>
+        <span className="adm-badge"><Icon name="lock" size={13} /> área restrita</span>
         <h1 className="auth-title">Administração</h1>
         <p className="auth-sub">Digite a senha do administrador para continuar.</p>
 
@@ -53,7 +54,7 @@ export default function AdminLogin() {
           />
         </div>
 
-        {error && <p className="auth-error">⚠️ {error}</p>}
+        {error && <p className="auth-error"><Icon name="warn" size={14} /> {error}</p>}
 
         <button className="btn btn-primary btn-wide" disabled={loading}>
           {loading ? 'Verificando…' : 'Entrar no painel'}

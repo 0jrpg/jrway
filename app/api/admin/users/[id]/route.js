@@ -20,6 +20,7 @@ export async function PATCH(req, ctx) {
     // Removeu o selo volta também o crédito obrigatório (o prêmio acabou)
     if (!fields.verified) fields.hide_watermark = false;
   }
+  if (b.admin_badge !== undefined) fields.admin_badge = Boolean(b.admin_badge);
 
   if (!Object.keys(fields).length) return NextResponse.json({ ok: false, error: 'Nada a atualizar.' }, { status: 400 });
 

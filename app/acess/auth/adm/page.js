@@ -1,5 +1,6 @@
 import { ensureSchema, listUsers, adminStats } from '@/lib/db';
 import { isAdmin } from '@/lib/auth';
+import Icon from '@/components/Icon';
 import AdminLogin from './AdminLogin';
 import AdminPanel from './AdminPanel';
 
@@ -39,7 +40,7 @@ export default async function AdminPage() {
     return (
       <main className="nf">
         <div className="nf-card">
-          <span className="nf-emoji">🛠️</span>
+          <span className="nf-emoji"><Icon name="wrench" size={52} /></span>
           <h1>Banco indisponível</h1>
           <p>{dbError}</p>
           <p className="muted">Verifique a variável DATABASE_URL.</p>
@@ -48,5 +49,5 @@ export default async function AdminPage() {
     );
   }
 
-  return <AdminPanel users={users} stats={stats} />;
+  return <AdminPanel users={users.map(({ password_hash, ...u }) => u)} stats={stats} />;
 }

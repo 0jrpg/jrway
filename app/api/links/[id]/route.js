@@ -20,13 +20,13 @@ export async function PATCH(req, ctx) {
   const b = await req.json().catch(() => ({}));
   const fields = {};
   if (b.label !== undefined) fields.label = String(b.label).trim().slice(0, 60) || link.label;
-  if (b.icon !== undefined) fields.icon = String(b.icon).trim().slice(0, 16) || '🔗';
+  if (b.icon !== undefined) fields.icon = String(b.icon).trim().slice(0, 24) || 'link';
   if (b.active !== undefined) fields.active = Boolean(b.active);
   if (b.url !== undefined) {
     // Preenche https:// automaticamente se a pessoa esqueceu o protocolo
     const url = withHttps(String(b.url).trim().slice(0, 500));
     if (!/^https?:\/\/.+/i.test(url) || !isHttpUrl(url)) {
-      return NextResponse.json({ ok: false, error: 'Endereço inválido — algo como "instagram.com/seuperfil" já basta 🙃' }, { status: 400 });
+      return NextResponse.json({ ok: false, error: 'Endereço inválido — algo como "instagram.com/seuperfil" já basta.' }, { status: 400 });
     }
     fields.url = url;
   }

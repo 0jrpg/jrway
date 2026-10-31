@@ -11,6 +11,7 @@
 // kinds: 'avatar' (1:1 → 512²) | 'cover' (3:1 → 1200×400) | 'photo' (chips).
 
 import { useEffect, useRef, useState } from 'react';
+import Icon from '@/components/Icon';
 
 const ZOOM_MIN = 1;
 const ZOOM_MAX = 6;
@@ -239,8 +240,8 @@ export default function ImageCropper({ file, kind, onCancel, onConfirm }) {
     <div className="crop-overlay" role="dialog" aria-modal="true" aria-label={conf.title}>
       <div className="crop-modal">
         <header className="crop-head">
-          <span>✂️ {conf.title}</span>
-          <button type="button" className="tool-btn" onClick={onCancel} disabled={saving} title="Fechar sem salvar" aria-label="Fechar">✕</button>
+          <span className="crop-head-title"><Icon name="scissors" size={16} /> {conf.title}</span>
+          <button type="button" className="tool-btn" onClick={onCancel} disabled={saving} title="Fechar sem salvar" aria-label="Fechar"><Icon name="x" size={15} /></button>
         </header>
 
         {error ? (
@@ -295,9 +296,9 @@ export default function ImageCropper({ file, kind, onCancel, onConfirm }) {
         {!error && meta && (
           <div className="crop-tools">
             <div className="crop-icons">
-              <button type="button" className="tool-btn" onClick={() => rotate(-1)} title="Girar à esquerda" aria-label="Girar à esquerda">⟲</button>
-              <button type="button" className="tool-btn" onClick={() => rotate(1)} title="Girar à direita" aria-label="Girar à direita">⟳</button>
-              <button type="button" className={`tool-btn ${flip ? 'on' : ''}`} onClick={() => setFlip((f) => !f)} title="Espelhar imagem" aria-label="Espelhar imagem">⇄</button>
+              <button type="button" className="tool-btn" onClick={() => rotate(-1)} title="Girar à esquerda" aria-label="Girar à esquerda"><Icon name="rotateCcw" size={16} /></button>
+              <button type="button" className="tool-btn" onClick={() => rotate(1)} title="Girar à direita" aria-label="Girar à direita"><Icon name="rotateCw" size={16} /></button>
+              <button type="button" className={`tool-btn ${flip ? 'on' : ''}`} onClick={() => setFlip((f) => !f)} title="Espelhar imagem" aria-label="Espelhar imagem"><Icon name="flip" size={16} /></button>
             </div>
             <input
               type="range"
@@ -315,7 +316,11 @@ export default function ImageCropper({ file, kind, onCancel, onConfirm }) {
         <footer className="crop-foot">
           <button type="button" className="btn btn-ghost" onClick={onCancel} disabled={saving}>Cancelar</button>
           <button type="button" className="btn btn-primary" onClick={confirm} disabled={!ready || saving || Boolean(error)}>
-            {saving ? 'Gerando… ⏳' : '✂️ Recortar e usar'}
+            {saving ? 'Gerando…' : (
+              <>
+                <Icon name="scissors" size={15} /> Recortar e usar
+              </>
+            )}
           </button>
         </footer>
 

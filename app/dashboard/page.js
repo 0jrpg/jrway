@@ -17,5 +17,7 @@ export default async function DashboardPage() {
   if (!user) redirect('/entrar');
 
   const links = await getLinksForUser(user.id);
-  return <DashboardClient initialUser={user} initialLinks={links} demoMode={!hasDb} />;
+  // Higieniza o que vai pro client: hash de senha e mensagem do cadastro não precisam aqui
+  const { password_hash, message, ...safeUser } = user;
+  return <DashboardClient initialUser={safeUser} initialLinks={links} demoMode={!hasDb} />;
 }
