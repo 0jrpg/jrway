@@ -2,11 +2,12 @@
 // O admin secreto NUNCA entra no mapa do site.
 
 import { ensureSchema, listProfileSlugs } from '@/lib/db';
+import { baseUrl } from '@/lib/validate';
 
 export const dynamic = 'force-dynamic';
 
 export default async function sitemap() {
-  const base = (process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000').replace(/\/$/, '');
+  const base = baseUrl();
 
   const entries = [
     { url: `${base}/`, changeFrequency: 'weekly', priority: 1 }

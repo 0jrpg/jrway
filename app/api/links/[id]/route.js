@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { ensureSchema, getLinkById, updateLink, deleteLink } from '@/lib/db';
 import { getSessionUser } from '@/lib/auth';
-import { withHttps, isHttpUrl } from '@/lib/validate';
+import { normalizeLinkUrl, isValidLinkUrl } from '@/lib/validate';
 import { normalizeCustom } from '@/lib/theme';
 
 function ownLinkOr404(link, user) {
@@ -23,10 +23,10 @@ export async function PATCH(req, ctx) {
   if (b.icon !== undefined) fields.icon = String(b.icon).trim().slice(0, 24) || 'link';
   if (b.active !== undefined) fields.active = Boolean(b.active);
   if (b.url !== undefined) {
-    // Preenche https:// automaticamente se a pessoa esqueceu o protocolo
-    const url = withHttps(String(b.url).trim().slice(0, 500));
-    if (!/^https?:\/\/.+/i.test(url) || !isHttpUrl(url)) {
-      return NextResponse.json({ ok: false, error: 'Endereço inválido — algo como "instagram.com/seuperfil" já basta.' }, { status: 400 });
+    // https:// automático para web; e-mail puro vira mailto:
+    const url = normalizeLinkUrl(String(b.url).trim().slice(0, 500));
+    if (!url || !isValidLinkUrl(url)) {
+      return NextResponse.json({ ok: false, error: 'Endereço inválido — algo como "instagram.com/seuperfil" ou um e-mail já basta.' }, { status: 400 });
     }
     fields.url = url;
   }

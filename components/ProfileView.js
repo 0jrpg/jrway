@@ -128,15 +128,24 @@ export default function ProfileView({ user, links = [], preview = false }) {
             const look = lookFor(l);
             const iconName = look.icon || l.icon || 'link';
             const svgIcon = hasIcon(iconName);
+            // mailto:/tel: não seguem redirect http: a página abre o destino
+            // direto e conta o clique em paralelo (beacon ?nr=1).
+            const isDirect = /^mailto:/i.test(l.url || '');
+            const href = preview ? undefined : (isDirect ? l.url : `/api/c/${l.id}`);
+            const onGo = preview
+              ? (e) => e.preventDefault()
+              : isDirect
+                ? () => { try { fetch(`/api/c/${l.id}?nr=1`, { keepalive: true }).catch(() => {}); } catch { /* contador é best-effort */ } }
+                : undefined;
             return (
               <a
                 key={l.id}
                 className={`pv-link ${look.cls}`}
                 style={{ '--i': i, ...look.style }}
-                href={preview ? undefined : `/api/c/${l.id}`}
-                target={preview ? undefined : '_blank'}
+                href={href}
+                target={preview || isDirect ? undefined : '_blank'}
                 rel="noopener noreferrer"
-                onClick={preview ? (e) => e.preventDefault() : undefined}
+                onClick={onGo}
                 title={preview ? l.url : undefined}
               >
                 <span className={`pv-link-icon ${svgIcon ? 'pv-icon-svg' : ''}`}>

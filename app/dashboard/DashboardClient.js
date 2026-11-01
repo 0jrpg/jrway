@@ -8,7 +8,7 @@ import ImageCropper from '@/components/ImageCropper';
 import Icon, { hasIcon, LINK_ICONS } from '@/components/Icon';
 import Logo from '@/components/Logo';
 import { PRESETS, applyPreset, LINK_BRANDS, BADGE_POSITIONS } from '@/lib/theme';
-import { withHttps } from '@/lib/validate';
+import { normalizeLinkUrl, withHttps } from '@/lib/validate';
 
 const BTN_STYLES = { glass: 'Vidro', solid: 'Sólido', gradient: 'Gradiente', outline: 'Contorno' };
 const EFFECTS = { blobs: 'Manchas', grid: 'Grade', none: 'Nenhum' };
@@ -202,7 +202,7 @@ export default function DashboardClient({ initialUser, initialLinks, demoMode })
     clearTimeout(timers.current[key]);
     timers.current[key] = setTimeout(() => {
       const body = { ...patch };
-      if (patch.url !== undefined) body.url = withHttps(patch.url); // https:// automático no envio
+      if (patch.url !== undefined) body.url = normalizeLinkUrl(patch.url); // https:// automático (ou mailto:)
       api(`/api/links/${id}`, { method: 'PATCH', body: JSON.stringify(body) })
         .catch((e) => showToast(e.message, 'err'));
     }, 450);
@@ -229,7 +229,7 @@ export default function DashboardClient({ initialUser, initialLinks, demoMode })
     }
     setAdding(true);
     try {
-      const body = { ...newLink, url: withHttps(newLink.url) }; // https:// automático
+      const body = { ...newLink, url: normalizeLinkUrl(newLink.url) }; // https:// (ou mailto:) automático
       const d = await api('/api/links', { method: 'POST', body: JSON.stringify(body) });
       setLinks((ls) => [...ls, d.link]);
       setNewLink({ label: '', url: '', icon: 'link' });
@@ -409,7 +409,7 @@ export default function DashboardClient({ initialUser, initialLinks, demoMode })
               <div className="add-row">
                 <IconPicker value={newLink.icon} onChange={(n) => setNewLink((nl) => ({ ...nl, icon: n }))} />
                 <input className="input" placeholder="Título (ex: Meu Instagram)" maxLength={60} value={newLink.label} onChange={(e) => setNewLink((n) => ({ ...n, label: e.target.value }))} />
-                <input className="input" placeholder="exemplo.com — https:// é automático" maxLength={500} value={newLink.url} onChange={(e) => setNewLink((n) => ({ ...n, url: e.target.value }))} />
+                <input className="input" placeholder="exemplo.com — ou eu@email.com (vira mailto:)" maxLength={500} value={newLink.url} onChange={(e) => setNewLink((n) => ({ ...n, url: e.target.value }))} />
                 <button type="button" className="btn btn-primary" onClick={addLink} disabled={adding}>
                   <Icon name="plus" size={15} /> Adicionar
                 </button>

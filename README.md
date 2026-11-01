@@ -11,6 +11,9 @@ personalização de tema, cores, fonte, efeitos e botões — tudo com prévia a
 - 🖼️ **Hospedagem de fotos**: aceita qualquer formato de imagem (JPG, PNG, GIF, AVIF, TIFF…), converte para **WebP** e guarda em um **repositório de dados no GitHub** (token fine-grained), servido pela CDN jsDelivr
 - ✂️ **Editor de recorte**: antes do envio dá para **recortar, girar, dar zoom e espelhar** a imagem (estilo Instagram) — o recorte sai em WebP já enquadradíssimo
 - 🛡 **Imagens protegidas**: avatar, capa e galeria **sem arrastar, sem clique-direito e sem toque-longo de salvar** no celular
+- 🎬 **Animações em tudo**: abertura cinematográfica do site (entrada com blur→foco, navegação que desce, aurora de luzes e estrelas piscando), marquee infinito de redes, brilho varrendo botões e a tela do celular, selos/logo pulsando e micro-interações nos cards — a página bio também entra animada
+- 🖼️ **Fallback de fotos pronto**: uploads do GitHub são servidos via `/api/media/…` (repo privado ou público); URLs antigas de jsDelivr são convertidas automaticamente na leitura
+- ✉️ **Links de e-mail (mailto:)** além de web: digitou `eu@email.com`, o botão abre o app de e-mail (com contador de cliques)
 - 🔤 **Ícones em SVG**: nada de emoji na interface — catálogo próprio de ícones desenhados em traço (`components/Icon.js`), logo própria em SVG (favicon incluído)
 - ✉️ **Mensagem para o admin**: quem se cadastra pode escrever uma mensagem que aparece **direto no painel** antes de aprovar (com notificação por **Discord/Telegram** opcional)
 - 🤍 **"Criado no JRWay" opcional**: perfis **verificados** podem ocultar o crédito da página
@@ -102,7 +105,7 @@ caem em `public/uploads/` — funciona no `npm run dev` mas **não** persiste na
 
 ### Editor de recorte (antes do envio)
 
-Ao escolher uma imagem no painel (avatar, capa ou foto da galeria) o editor abre na hora:
+Ao escolher uma imagem no painel (avatar, capa ou foto da galeria) o editor abre **na tela da frente, centralizado**:
 
 - **arrastar** posiciona a imagem • **roda do mouse / pinça** = zoom • giram de 90° em 90° • espelha com um clique
 - o **frame é fixo** e mostra exatamente o enquadramento final: avatar 1:1 (512×512), capa 3:1 (1200×400) e, para fotos, chips de proporção (1:1, 4:5, 16:9, 3:2 — até 1440px)
@@ -116,20 +119,30 @@ Ao escolher uma imagem no painel (avatar, capa ou foto da galeria) o editor abre
 - **Crédito "Criado no JRWay"**: só perfis verificados podem ocultar. **Des-verificar no painel volta a exigir o crédito automaticamente.**
 - As permissões são reforçadas no servidor: a API recusa (`403`) mudanças de selo/crédito de quem não é verificado.
 
-### Tema por botão (Instagram/TikTok/WhatsApp)
+### Tema por botão (Instagram/TikTok/WhatsApp/E-mail)
 
 Na aba **Links**, abra o seletor de tema (ícone de paleta) de qualquer link:
 
-- **Marcar uma marca** aplica o visual oficial (Instagram com o gradiente clássico, TikTok preto, WhatsApp verde) e troca o ícone do link automaticamente;
+- **Marcar uma marca** aplica o visual oficial (Instagram com o gradiente clássico, TikTok preto, WhatsApp verde, e-mail vermelho) e troca o ícone do link automaticamente;
 - **"Nenhum" + Fundo/Texto/Gradiente** cria um botão com cor própria;
 - o **ícone do link** também é SVG agora: clique no quadrado do ícone para abrir o catálogo (16 ícones).
 - sem tema individual, o botão segue o estilo global da página (aba Aparência).
 
+### Link de e-mail (mailto:)
+
+Botão de e-mail é cidadão de primeira classe — não precisa de https:
+
+- digitou **`eu@email.com`** no campo de endereço? O link fica **`mailto:eu@email.com`** no toque do visitante (abre o app de e-mail dele);
+- aceita também `mailto:…` explícito, incluindo `?subject=Oi`;
+- web comum continua igual: `instagram.com/eu` → `https://instagram.com/eu`;
+- e-mail NÃO passa pelo redirecionador de cliques (o navegador ignore `mailto:` em redirects) — na página o botão abre o app direto e conta o clique em paralelo, então **o contador continua valendo**.
+
 ### Detalhes
 
 - O nome do arquivo já vai pronto: `images/{usuario}/{tipo}-{usuario}-{timestamp}.webp`
-- Se preferir outra CDN/base de leitura, defina `GITHUB_CDN_BASE` (ex.: `https://raw.githubusercontent.com/SEU-USUARIO/jrway-dados/main`).
-- O token é fine-grained: ele **só** pode escrever nesse repositório específico — se vazar, o dano é isolado.
+- **As imagens são servidas pelo próprio site** (`/api/media/…`) — funciona com repo de dados PÚBLICO ou PRIVADO, sem depender de CDN externa. `MEDIA_PROXY=0` volta para a jsDelivr/raw se você preferir.
+- Se preferir outra CDN/base de leitura nessa volta (`MEDIA_PROXY=0`), defina `GITHUB_CDN_BASE` (ex.: `https://raw.githubusercontent.com/SEU-USUARIO/jrway-dados/main`).
+- O token é fine-grained: ele **só** pode escrever nesse repositório específico — se vazar, o dano é isolado. E como ele é usado **só no servidor** (proxy `/api/media`), nada vai para o navegador.
 - Não esqueça de **nunca** commitar o token: use variáveis de ambiente.
 
 ## Painel admin secreto

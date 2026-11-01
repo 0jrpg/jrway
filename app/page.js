@@ -36,10 +36,29 @@ const FEATURES = [
   { icon: 'bolt', title: 'Rápido e grátis', text: 'Sua página fica no ar em segundos, com URL própria e carregamento instantâneo.' }
 ];
 
+// Faixa rolante (marquee) — redes que cabem numa página JRWay.
+const BRANDS = [
+  { icon: 'instagram', label: 'Instagram' },
+  { icon: 'tiktok', label: 'TikTok' },
+  { icon: 'whatsapp', label: 'WhatsApp' },
+  { icon: 'film', label: 'YouTube' },
+  { icon: 'bird', label: 'X / Twitter' },
+  { icon: 'send', label: 'Telegram' },
+  { icon: 'music', label: 'Spotify' },
+  { icon: 'mail', label: 'E-mail' },
+  { icon: 'globe', label: 'Seu site' },
+  { icon: 'chat', label: 'Twitch' }
+];
+
 export default function Home() {
   return (
     <div className="landing">
-      <div className="landing-bg" aria-hidden="true" />
+      <div className="landing-bg" aria-hidden="true">
+        <span className="orb orb--1" />
+        <span className="orb orb--2" />
+        <span className="orb orb--3" />
+        <span className="stars" />
+      </div>
 
       <nav className="nav">
         <div className="nav-inner">
@@ -79,11 +98,29 @@ export default function Home() {
               <div className="phone-screen">
                 <ProfileView user={{ ...DEMO_USER, theme: normalizeTheme({ preset: 'meia-noite' }) }} links={DEMO_LINKS} preview />
               </div>
+              <span className="phone-fx" aria-hidden="true" />
             </div>
+            <span className="phone-glow" aria-hidden="true" />
             <span className="hero-demo-tag"><Icon name="heart" size={14} /> assim pode ficar a sua</span>
           </div>
         </div>
       </header>
+
+      {/* MARQUEE — redes que cabem numa página JRWay */}
+      <section className="brands" aria-label="Conecte suas redes">
+        <div className="brands-track">
+          {[0, 1].map((seq) => (
+            <div className="brands-loop" key={seq} aria-hidden={seq === 1}>
+              {BRANDS.map((b) => (
+                <span className="brand-chip" key={`${b.label}-${seq}`}>
+                  <Icon name={b.icon} size={20} />
+                  {b.label}
+                </span>
+              ))}
+            </div>
+          ))}
+        </div>
+      </section>
 
       {/* COMO FUNCIONA */}
       <section className="section" id="como">

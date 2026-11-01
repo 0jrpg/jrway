@@ -3,7 +3,8 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { ensureSchema } from '@/lib/db';
 import { getSessionUser } from '@/lib/auth';
-import { hasGithub, putFile, publicUrlFor } from '@/lib/github';
+import { hasGithub, putFile } from '@/lib/github';
+import { mediaUrlFor } from '@/lib/media';
 import { toWebP, isAllowedUpload } from '@/lib/imaging';
 
 // Aceita qualquer arquivo de imagem (jpg, png, webp, gif, avif, tiff, bmp…),
@@ -38,7 +39,7 @@ export async function POST(req) {
   if (hasGithub) {
     try {
       const ghPath = await putFile(`images/${user.username}/${fname}`, webpBuffer);
-      return NextResponse.json({ ok: true, url: publicUrlFor(ghPath) });
+      return NextResponse.json({ ok: true, url: mediaUrlFor(ghPath) });
     } catch (e) {
       return NextResponse.json({ ok: false, error: e.message || 'Falha no upload para o GitHub.' }, { status: 502 });
     }

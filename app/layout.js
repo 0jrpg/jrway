@@ -1,7 +1,8 @@
 import './globals.css';
+import { safeBaseUrlObject } from '@/lib/validate';
 
 export const metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'),
+  metadataBase: safeBaseUrlObject(),
   title: {
     default: 'JRWay — sua página de links e fotos, do seu jeito',
     template: '%s · JRWay'
